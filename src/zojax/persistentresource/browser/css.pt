@@ -1,0 +1,10 @@
+<div i18n:domain="zojax.persistentresource">
+  <tal:block i18n:translate="">Resource:</tal:block>
+  <a target="_blank" tal:attributes="href view/path">
+    <strong tal:content="context/__name__" />
+  </a>
+
+  <br />
+  <pre tal:content="structure context/data"></pre>
+  <br />
+</div>

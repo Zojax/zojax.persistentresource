@@ -1,0 +1,160 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.persistentresource">
+
+  <!-- configlet -->
+  <zojax:configlet
+     name="ui.resources"
+     title="Resources"
+     description="Custom portal resources."
+     class=".configlet.PersistentResources"
+     schema=".interfaces.IPersistentResources">
+    <require
+       permission="zope.Public"
+       interface="zojax.content.type.interfaces.IItem
+		  zope.app.container.interfaces.IReadContainer" />
+    <require
+       permission="zojax.Configure"
+       set_schema="zojax.content.type.interfaces.IItem"
+       interface="zope.app.container.interfaces.IWriteContainer" />
+  </zojax:configlet>
+
+  <class class=".configlet.PersistentResources">
+    <implements interface="zojax.content.type.interfaces.IContent" />
+    <implements interface="zojax.content.type.interfaces.IContainerContentsAware" />
+  </class>
+
+  <permissions for=".configlet.PersistentResources" name="default">
+    <denyAll permission="zojax.DeleteContent" />
+  </permissions>
+
+  <!-- modification info for resource -->
+  <adapter factory=".helpers.ModificationInfo" />
+
+  <!-- resources handler -->
+  <adapter
+     name="zojax-resources"
+     provides="zope.interface.Interface"
+     for="zope.publisher.interfaces.browser.IBrowserRequest"
+     factory=".publisher.ContainerResources" />
+
+  <class class=".publisher.Resources">
+    <allow 
+       attributes="__getitem__"
+       interface="zope.publisher.interfaces.browser.IBrowserPublisher" />
+  </class>
+
+  <class class=".publisher.ContainerResources">
+    <allow 
+       attributes="__getitem__"
+       interface="zope.publisher.interfaces.browser.IBrowserPublisher" />
+  </class>
+
+  <class class=".publisher.ResourceWrapper">
+    <allow
+       attributes="GET HEAD __call__"
+       interface="zope.publisher.interfaces.browser.IBrowserPublisher" />
+  </class>
+
+  <!-- file resource -->
+  <zojax:content
+     name="persistent.fileresource"
+     title="File Resource"
+     description="Resource for binary data"
+     class=".file.FileResource"
+     schema=".interfaces.IFileResource"
+     containers="persistent.resources
+		 persistent.resources.root" />
+
+  <class class=".file.FileResource">
+    <allow interface=".interfaces.IFileResource" />
+    <require
+       permission="zojax.Configure"
+       set_schema=".interfaces.IFileResource" />
+  </class>
+
+  <adapter
+     for=".interfaces.IFileResource"
+     factory="zojax.cacheheaders.staticcache.getStaticCache" />
+
+  <subscriber handler=".file.fileCopiedEvent" />
+
+  <!-- css resource -->
+  <zojax:content
+     name="persistent.cssresource"
+     title="CSS Resource"
+     description="CSS Resource support zrt commands."
+     class=".css.CSSResource"
+     schema=".interfaces.ICSSResource"
+     containers="persistent.resources
+		 persistent.resources.root" />
+
+  <class class=".css.CSSResource">
+    <allow interface=".interfaces.ICSSResource" />
+    <require
+       permission="zojax.Configure"
+       set_schema=".interfaces.ICSSResource" />
+  </class>
+
+  <subscriber handler=".css.cssModifiedHandler" />
+
+  <adapter
+     for=".interfaces.ICSSResource"
+     factory="zojax.cacheheaders.staticcache.getStaticCache" />
+
+  <!-- text resource -->
+  <zojax:content
+     name="persistent.textresource"
+     title="Text Resource"
+     description="Simple text based resource"
+     class=".text.TextResource"
+     schema=".interfaces.ITextResource"
+     containers="persistent.resources
+		 persistent.resources.root" />
+
+  <class class=".text.TextResource">
+    <allow interface=".interfaces.ITextResource" />
+    <require
+       permission="zojax.Configure"
+       set_schema=".interfaces.ITextResource" />
+  </class>
+
+  <adapter
+     for=".interfaces.ITextResource"
+     factory="zojax.cacheheaders.staticcache.getStaticCache" />
+
+  <!-- container -->
+  <zojax:content
+     schema=".interfaces.IResourcesContainer"
+     name="persistent.resources"
+     title="Resources"
+     description="Resources container"
+     class=".container.ResourcesContainer"
+     containers="persistent.resources
+		 persistent.resources.root"
+     contains="persistent.resources
+	       persistent.cssresource
+	       persistent.fileresource
+	       persistent.textresource" />
+
+  <class class=".container.ResourcesContainer">
+    <implements interface="zojax.content.type.interfaces.IContainerContentsAware" />
+    <require
+       permission="zope.View"
+       interface="zojax.content.type.interfaces.IItem
+		  zope.app.container.interfaces.IReadContainer" />
+    <require
+       permission="zojax.Configure"
+       set_schema="zojax.content.type.interfaces.IItem"
+       interface="zope.app.container.interfaces.IWriteContainer" />
+  </class>
+
+  <!-- browser views -->
+  <include package=".browser" />
+
+  <!-- translations -->
+  <i18n:registerTranslations directory="locales"/>
+
+</configure>

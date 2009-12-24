@@ -1,0 +1,218 @@
+====================
+Persistent Resources
+====================
+
+    >>> import os.path
+    >>> from zope import component, interface
+    >>> from zope.testbrowser.testing import Browser
+    >>> from zope.app.testing.functional import getRootFolder
+    >>> from zope.app.component.hooks import setSite
+    >>> from zojax.persistentresource.interfaces import IResource
+    >>> from zojax.persistentresource.interfaces import IPersistentResources
+
+    >>> root = getRootFolder()
+    >>> setSite(root)
+
+    >>> admin = Browser()
+    >>> admin.handleErrors = False
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+
+    >>> user = Browser()
+    >>> user.handleErrors = False
+    >>> user.open('http://localhost/@@/zojax-resources/')
+
+
+We can add css resource, file resource and resource container
+
+    >>> admin.open("http://localhost/settings/")
+    >>> admin.getLink('Resources').click()
+    >>> print admin.contents
+    <html>
+    ...
+    <a href="http://localhost/settings/ui/resources/+/persistent.cssresource/">CSS Resource</a>
+    ...
+    <a href="http://localhost/settings/ui/resources/+/persistent.fileresource/">File Resource</a>
+    ...
+    <a href="http://localhost/settings/ui/resources/+/persistent.resources/">Resources</a>
+    ...
+    </html>
+
+CSS Resource
+
+    >>> admin.getLink(url='persistent.cssresource/').click()
+    >>> admin.getControl('Title').value = u'CSS Resource'
+    >>> admin.getControl('Source').value = """
+    ... .strong { font-weight: bold }
+    ... """
+    >>> admin.getControl('Content short name').value = 'r.css'
+    >>> admin.getControl(name='content.add.buttons.add').click()
+    >>> print admin.contents
+    <html>
+    ...
+    <h1 class="z-content-title">CSS Resource</h1>
+    ...
+    Resource:
+    <a target="_blank"
+       href="http://localhost/@@/zojax-resources/r.css">
+       <strong>r.css</strong>
+    </a>
+    <br />
+    <pre>
+       .strong { font-weight: bold }
+    </pre>
+    ...
+    </html>
+
+Access resource
+
+    >>> user.open('http://localhost/@@/zojax-resources/r.css')
+    >>> print user.contents
+    <BLANKLINE>
+    .strong { font-weight: bold }
+    <BLANKLINE>
+
+    >>> user.headers['Content-Type']
+    'text/css;charset=utf-8'
+
+
+Edit css resource
+
+    >>> admin.open("http://localhost/settings/ui/resources/r.css/context.html/content/")
+    >>> admin.getControl('Source').value = """
+    ... .strong { font-weight: normal }
+    ... """
+    >>> admin.getControl('Short Name').value = u'r1.css'
+    >>> admin.getControl(name='content.edit.buttons.save').click()
+
+    >>> user.open('http://localhost/@@/zojax-resources/r.css')
+    Traceback (most recent call last):
+    ...
+    NotFound: ... name: u'r.css'
+
+    >>> user.open('http://localhost/@@/zojax-resources/r1.css')
+    >>> print user.contents
+    <BLANKLINE>
+    .strong { font-weight: normal }
+    <BLANKLINE>
+
+Removing resource
+
+    >>> admin.getControl(name='content.edit.buttons.cancel').click()
+    >>> admin.getControl(name='ids:list').value = [u'r1.css']
+    >>> admin.getControl(name="form.buttons.delete").click()
+
+    >>> user.open('http://localhost/@@/zojax-resources/r1.css')
+    Traceback (most recent call last):
+    ...
+    NotFound: ... name: u'r1.css'
+
+
+File resource
+-------------
+
+    >>> admin.getLink('File Resource').click()
+    >>> admin.getControl('Title').value = u'Image'
+
+    >>> filePath = os.path.join(os.path.split(__file__)[0], 'image.jpg')
+    >>> fileControl = admin.getControl('Resource data').mech_control
+    >>> fileControl.add_file(open(filePath), filename='image.jpg')
+    >>> admin.getControl(name='content.add.buttons.add').click()
+
+    >>> user.open('http://localhost/@@/zojax-resources/image.jpg')
+    >>> print user.headers
+    Status: 200 Ok
+    Content-Disposition: inline; filename="image.jpg"
+    Content-Length: 755
+    Content-Type: image/jpeg
+    Last-Modified: ...
+    X-Generated-Time: ...
+    X-Powered-By: ...
+
+    >>> admin.open("http://localhost/settings/ui/resources/image.jpg/context.html/content/")
+    >>> admin.getControl('Title').value = u'Image2'
+    >>> admin.getControl('Short Name').value = u'image2.jpg'
+    >>> admin.getControl(name='content.edit.buttons.save').click()
+
+
+Text resource
+-------------
+
+    >>> admin.getLink('Up one level').click()
+    >>> admin.getLink('Text Resource').click()
+    >>> admin.getControl('Title').value = u'Text'
+    >>> admin.getControl('Content type').value = u'text/javascript'
+    >>> admin.getControl('Text').value = "var test = u'test';"
+    >>> admin.getControl('Content short name').value = u'test.js'
+    >>> admin.getControl(name='content.add.buttons.add').click()
+
+    >>> user.open('http://localhost/@@/zojax-resources/test.js')
+    >>> print user.headers
+    Status: 200 Ok
+    Content-Disposition: inline; filename="test.js"
+    Content-Length: 19
+    Content-Type: text/javascript;charset=utf-8
+    Last-Modified: ...
+    X-Generated-Time: ...
+    X-Powered-By: ...
+
+    >>> print user.contents
+    var test = u'test';
+
+    >>> admin.open("http://localhost/settings/ui/resources/test.js/context.html/content/")
+    >>> admin.getControl(name="content.widgets.title").value = u'Test JS'
+    >>> admin.getControl('Short Name').value = u'test1.js'
+    >>> admin.getControl(name='content.edit.buttons.save').click()
+
+
+Resource container
+------------------
+
+    >>> admin.open("http://localhost/settings/ui/resources/+/persistent.resources/")
+    >>> admin.getControl('Title').value = u'Container'
+    >>> admin.getControl('Content short name').value = 'styles'
+    >>> admin.getControl(name='content.add.buttons.add').click()
+
+    >>> admin.getLink('CSS Resource').click()
+    >>> admin.getControl('Title').value = u'CSS Resource'
+    >>> admin.getControl('Source').value = """
+    ... .strong { font-weight: bold }
+    ... """
+    >>> admin.getControl('Content short name').value = 'r.css'
+    >>> admin.getControl(name='content.add.buttons.add').click()
+
+Access resource in container
+
+    >>> user.open('http://localhost/@@/zojax-resources/styles/r.css')
+    >>> print user.contents
+    <BLANKLINE>
+    .strong { font-weight: bold }
+    <BLANKLINE>
+
+
+Upload
+
+    >>> admin.open("http://localhost/settings/ui/resources/")
+    >>> admin.getLink('Upload').click()
+    >>> filePath = os.path.join(os.path.split(__file__)[0], 'test.tar.gz')
+    >>> fileControl = admin.getControl('Select file').mech_control
+    >>> fileControl.add_file(open(filePath), filename='test.tar.gz')
+    >>> admin.getControl(name='form.upload').click()
+
+    >>> print admin.contents
+    <html>
+    ...<input type="checkbox" name="ids:list" value="image.jpg" />...
+    </html>
+
+
+Sub container
+
+    >>> admin.getLink(url='persistent.resources/').click()
+    >>> admin.getControl('Title').value = u'Container'
+    >>> admin.getControl('Content short name').value = 'rcontainer'
+    >>> admin.getControl(name='content.add.buttons.add').click()
+
+    >>> admin.url
+    'http://localhost/settings/ui/resources/rcontainer/context.html'
+
+    >>> setSite(None)
+    

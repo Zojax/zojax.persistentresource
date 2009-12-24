@@ -1,0 +1,154 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zojax.persistentresource">
+
+  <!-- configlet -->
+  <browser:defaultView
+     name="context.html"
+     for="..interfaces.IPersistentResources" />
+
+  <adapter
+     for="..interfaces.IPersistentResources *"
+     factory="zojax.controlpanel.browser.breadcrumb.ConfigletBreadcrumb" />
+
+  <zojax:pagelet
+     name="content"
+     type="wizard.step"
+     for="..configlet.PersistentResources
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     class="zojax.wizard.step.WizardStepDisabled"
+     weight="1" />
+
+  <!-- container -->
+  <browser:icon
+     name="zmi_icon"
+     for="..interfaces.IResourcesContainer"
+     file="folder_icon.gif" />
+
+  <browser:icon
+     name="zmi_icon"
+     for="zojax.content.persistent_resources"
+     file="folder_icon.gif" />
+
+  <browser:defaultView
+     name="context.html"
+     for="..interfaces.IResourcesContainer" />
+
+  <zojax:pagelet
+     name="index.html"
+     for="zojax.content.persistent_resources"
+     class=".container.AddContainerResource"
+     permission="zojax.Configure" />
+
+  <adapter
+     for="..interfaces.IResourcesContainer *"
+     factory="z3c.traverser.traverser.PluggableTraverser"
+     provides="zope.publisher.interfaces.IPublishTraverse" />
+
+  <subscriber
+     for="..interfaces.IResourcesContainer *"
+     provides="z3c.traverser.interfaces.ITraverserPlugin"
+     factory=".publisher.ContainerPublisherPlugin" />
+
+  <zojax:pagelet
+     name="upload"
+     title="Upload"
+     type="wizard.step"
+     for="..interfaces.IResourcesContainer
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     template="upload.pt"
+     class=".upload.UploadResources"
+     provides="zojax.layoutform.interfaces.IPageletFormView"
+     permission="zojax.Configure"
+     weight="170" />
+
+  <!-- resource -->
+  <browser:defaultView
+     name="context.html"
+     for="..interfaces.IResource" />
+
+  <adapter
+     name="cancel"
+     provides="zojax.wizard.interfaces.IWizardButton"
+     for="..interfaces.IResource
+	  zojax.content.forms.interfaces.IEditContentWizard *"
+     factory=".container.backButton" />
+
+  <!-- file resource -->
+  <zojax:pagelet
+     name="index.html"
+     for="zojax.content.persistent_fileresource"
+     class=".file.AddFileResource"
+     permission="zojax.Configure" />
+
+  <zojax:pagelet
+     name="view"
+     title="View"
+     type="wizard.step"
+     for="..interfaces.IFileResource
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     template="file.pt"
+     class=".file.FileView"
+     provides="zojax.layoutform.interfaces.IPageletFormView"
+     permission="zope.View"
+     weight="10" />
+
+  <!-- css resource -->
+  <zojax:pagelet
+     name="index.html"
+     for="zojax.content.persistent_cssresource"
+     class=".css.AddCSSResource"
+     permission="zojax.Configure" />
+
+  <zojax:pagelet
+     name="view"
+     title="View"
+     type="wizard.step"
+     for="..interfaces.ICSSResource
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     template="css.pt"
+     class=".css.CSSView"
+     provides="zojax.layoutform.interfaces.IPageletFormView"
+     permission="zope.View"
+     weight="10" />
+
+  <zojax:pagelet
+     name="basic"
+     type="form.subform"
+     for="..interfaces.ICSSResource
+	  zojax.content.forms.interfaces.IContentStep"
+     class=".css.ModifyCSSResource"
+     permission="zojax.Configure"
+     weight="100" />
+
+  <!-- text resource -->
+  <zojax:pagelet
+     name="index.html"
+     for="zojax.content.persistent_textresource"
+     class=".text.AddTextResource"
+     permission="zojax.Configure" />
+
+  <zojax:pagelet
+     name="view"
+     title="View"
+     type="wizard.step"
+     for="..interfaces.ITextResource
+	  zojax.content.forms.interfaces.IEditContentWizard"
+     template="text.pt"
+     class=".text.TextView"
+     provides="zojax.layoutform.interfaces.IPageletFormView"
+     permission="zope.View"
+     weight="10" />
+
+  <zojax:pagelet
+     name="basic"
+     type="form.subform"
+     for="..interfaces.ITextResource
+	  zojax.content.forms.interfaces.IContentStep"
+     class=".text.ModifyTextResource"
+     permission="zojax.Configure"
+     weight="100" />
+
+</configure>
