@@ -1,0 +1,139 @@
+##############################################################################
+#
+# Copyright (c) 2003-2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Thu Dec  8 23:07:36 2011\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#: src/zojax/persistentresource/browser/css.pt:2
+msgid "Resource:"
+msgstr ""
+
+#: src/zojax/persistentresource/browser/file.pt:2
+msgid "File resource name:"
+msgstr ""
+
+#: src/zojax/persistentresource/browser/text.pt:2
+msgid "Text resource:"
+msgstr ""
+
+#: src/zojax/persistentresource/browser/upload.pt:17
+msgid "Upload"
+msgstr ""
+
+#: src/zojax/persistentresource/browser/upload.pt:2
+msgid "Batch uploads"
+msgstr ""
+
+#: src/zojax/persistentresource/browser/upload.pt:7
+msgid "Select file"
+msgstr ""
+
+#: src/zojax/persistentresource/browser/upload.pt:8
+msgid "You can upload archive file."
+msgstr ""
+
+#: src/zojax/persistentresource/browser/upload.py:55
+msgid "Files have been uploaded."
+msgstr ""
+
+#: src/zojax/persistentresource/configlet.py:27
+#: src/zojax/persistentresource/configure.zcml:8
+#: src/zojax/persistentresource/configure.zcml:129
+msgid "Resources"
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:108
+msgid "Text Resource"
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:108
+msgid "Simple text based resource"
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:129
+msgid "Resources container"
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:62
+msgid "Resource for binary data"
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:62
+msgid "File Resource"
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:8
+msgid "Custom portal resources."
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:85
+msgid "CSS Resource support zrt commands."
+msgstr ""
+
+#: src/zojax/persistentresource/configure.zcml:85
+msgid "CSS Resource"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:29
+msgid "Title"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:30
+msgid "Resource title"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:36
+msgid "Description"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:37
+msgid "Resource description"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:50
+msgid "Resource data"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:51
+msgid "Upload resource data."
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:59
+msgid "Source"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:60
+msgid "The source of css data."
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:68
+msgid "Content type"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:73
+msgid "Text"
+msgstr ""
+
+#: src/zojax/persistentresource/interfaces.py:74
+msgid "Resource text."
+msgstr ""
+
