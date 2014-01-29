@@ -97,7 +97,6 @@ Edit css resource
 
 Removing resource
 
-    >>> admin.getControl(name='content.edit.buttons.cancel').click()
     >>> admin.getControl(name='ids:list').value = [u'r1.css']
     >>> admin.getControl(name="form.buttons.delete").click()
 
